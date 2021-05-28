@@ -35,4 +35,6 @@ class Dog(HappyDogsModel):
 
     def get_full_name(self):
         """Get dog's full name."""
-        return "{} {}".format(self.first_name, self.last_name)
+        fullname = "{} {}".format(
+            self.first_name, self.last_name) if self.last_name else self.first_name
+        return fullname
