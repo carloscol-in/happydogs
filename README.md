@@ -6,8 +6,6 @@ Django project to book appointments for dogs boarding visits.
 
 ## Apps
 
----
-
 ### Dogs
 
 This app contains the models, admin, urls and views to handle the CRUD of dogs objects.
