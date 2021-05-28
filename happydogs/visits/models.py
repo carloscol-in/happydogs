@@ -28,16 +28,21 @@ class Visit(HappyDogsModel):
 
     class Meta:
         """Meta option."""
-        constraints = [
-            models.UniqueConstraint(
-                fields=['start_date', 'end_date', 'dog'],
-                name='Start date and end date should be unique for each dog',
-            ),
-        ]
+        # * right now it's unnecessary since this validation is also handled on clean().
+        # constraints = [
+        #     models.UniqueConstraint(
+        #         fields=['start_date', 'end_date', 'dog'],
+        #         name='Start date and end date should be unique for each dog',
+        #     ),
+        # ]
 
     def __str__(self):
         """Dog name -> (start_date, end_date)"""
-        return "{0} -> ({1}, {2})".format(self.dog, self.start_date, self.end_date)
+        return "{0} => ({1}, {2})".format(self.dog, self.start_date, self.end_date)
+
+    def get_boarding_visit_info(self):
+        """Dog name -> (start_date, end_date)"""
+        return "{0} => from {1} to {2}".format(self.dog, self.start_date, self.end_date)
 
     def clean(self):
         """Clean validated data.
@@ -49,7 +54,7 @@ class Visit(HappyDogsModel):
                 _("Start date should be lower or equal to end date.")
             )
 
-        overlap_exists = Visit.objects.filter(
+        overlap_query = Visit.objects.filter(
             Q(dog=self.dog),
             Q(
                 start_date__lte=self.start_date,
@@ -58,7 +63,8 @@ class Visit(HappyDogsModel):
                 start_date__lte=self.end_date,
                 end_date__gte=self.end_date
             )
-        ).exists()
+        )
+        overlap_exists = overlap_query.exists()
 
         if overlap_exists:
             raise ValidationError(
