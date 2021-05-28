@@ -6,3 +6,6 @@ psycopg2
 
 # PEP8
 autopep8
+
+# Environment
+django-environ==0.4.5
