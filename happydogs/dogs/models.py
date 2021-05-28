@@ -16,6 +16,8 @@ class Dog(HappyDogsModel):
     last_name = models.CharField(
         _('Dog last name'),
         max_length=100,
+        blank=True,
+        null=True,
     )
 
     class Meta:
