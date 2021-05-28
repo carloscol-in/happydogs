@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from happydogs.utils.models import HappyDogsModel
 
 
-class Dogs(HappyDogsModel):
+class Dog(HappyDogsModel):
     """Dogs model."""
     first_name = models.CharField(
         _('Dog first name'),
