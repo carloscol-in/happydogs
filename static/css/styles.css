@@ -1,5 +1,23 @@
+.Home__Calendar--form {
+  position: relative;
+  z-index: 10;
+}
+.Calendar__container {
+  position: relative;
+  margin-top: 3em;
+}
+#calendar {
+  /* display: none; */
+  position: absolute;
+  top: -50px;
+  opacity: 0;
+  z-index: 0;
+}
 .Calendar__header {
-  background-color: #ccc;
+  background-color: rgb(244, 245, 180);
+}
+.Calendar__header .Calendar__col:hover {
+  background-color: inherit;
 }
 .Calendar__row {
   width: 100%;
@@ -9,4 +27,16 @@
   padding: 0.5em 0.5em;
   text-align: center;
   border: 1px solid #aaa;
+  transition: background-color 0.5s ease;
+}
+.Calendar__col:hover {
+  background-color: rgb(199, 240, 209);
+}
+.Calendar__col--link,
+.Calendar__col--link:hover {
+  text-decoration: none;
+  color: black;
+}
+.Calendar__col--info {
+  height: 100%;
 }

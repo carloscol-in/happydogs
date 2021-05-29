@@ -18,8 +18,16 @@ $(function() {
         }
 
         $.get(`http://localhost:8000/visits/?period_start=${period_start}&period_end=${period_end}`, (data) => {
-            // console.log(data);
+            // $('#calendar').css('display', 'block');
+            $('#calendar').animate({
+                top: '0px',
+                opacity: 1,
+            }, 1000, () => {
+                console.log('animated');
+            });
+
             var html = '';
+
             for (const [key, value] of Object.entries(data.calendar)){
                 console.log(key, value);
 
@@ -30,9 +38,12 @@ $(function() {
 
                 html += `
                     <div class="Calendar__col">
-                        <small>${value.long_date}</small>
-                        <small>${value.short_date}</small>
-                        <p>${value.dog_count}</p>
+                        <a class="Calendar__col--link" href="visits/${value.long_date}">
+                            <div class="Calendar__col--info d-flex flex-column justify-content-center">
+                                <small>${value.short_date}</small>
+                                <p>${value.dog_count} dogs</p>
+                            </div>
+                        </a>
                     </div>
                 `;
             }
