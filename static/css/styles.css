@@ -1,0 +1,12 @@
+.Calendar__header {
+  background-color: #ccc;
+}
+.Calendar__row {
+  width: 100%;
+}
+.Calendar__col {
+  width: 14.28%;
+  padding: 0.5em 0.5em;
+  text-align: center;
+  border: 1px solid #aaa;
+}
