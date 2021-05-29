@@ -6,7 +6,6 @@ from django.views.generic import TemplateView
 
 # Views
 from .views import (
-    ListVisitView,
     get_visits_on_period,
     get_dogs_on_day,
 )
