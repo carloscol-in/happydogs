@@ -1,11 +1,10 @@
 """Visits views."""
 
-# DRF
-from rest_framework import mixins, viewsets
-from rest_framework.filters import SearchFilter
-
 # Django
+from django.http.response import JsonResponse
+from django.shortcuts import render
 from django.views.generic import ListView
+from django.views.decorators.http import require_http_methods
 
 # models
 from .models import Visit
@@ -22,62 +21,77 @@ class ListVisitView(ListView):
     context_object_name = 'visits'
 
     def get_queryset(self):
-        """Customize queryset to return dict object where 
+        """Customize queryset to return dict object where
         keys are ordered days within the period, and values
         the count of dogs."""
-        response = {"results": {}}
+        response = {"calendar": {}}
+
         period_start_str = self.request.GET.get('period_start', None)
         period_end_str = self.request.GET.get('period_end', None)
 
         period_start = datetime.strptime(period_start_str, "%Y-%m-%d")
         period_end = datetime.strptime(period_end_str, "%Y-%m-%d")
 
-        for i in range(0, (period_end - period_start).days + 1):
-            curr_date = period_start + timedelta(i)
-            response['intervals'].setdefault(
-                curr_date,
-                Visit.objects.filter(
-                    start_date__lte=curr_date,
-                    end_date__gte=curr_date)
-                .count()
-            )
+        period_week_start = (period_start -
+                             timedelta(days=period_start.weekday()))
+        period_week_end = (period_end +
+                           timedelta(days=(7 - (period_end.weekday() + 1))))
 
-        response.setdefault('week_start')
+        for i in range(0, (period_week_end - period_week_start).days + 1):
+            curr_date = period_week_start + timedelta(i)
+
+            if(curr_date >= period_start and curr_date <= period_end):
+                response['calendar'].setdefault(
+                    curr_date.strftime("%Y-%m-%d"),
+                    {
+                        'short_date': curr_date.strftime("%b %d"),
+                        'dog_count': Visit.objects.filter(
+                            start_date__lte=curr_date,
+                            end_date__gte=curr_date)
+                        .count()
+                    }
+                )
+                continue
+
+            response['calendar'].setdefault(curr_date.strftime("%b %d"), '')
 
         return response
 
 
-# class CircleViewSet(mixins.ListModelMixin,
-#                     viewsets.GenericViewSet):
-#     """Circle view set."""
+@require_http_methods(["GET"])
+def get_visits_on_period(request):
+    """Json response for visits on given period."""
+    response = {"calendar": {}}
 
-#     serializer_class = VisitModelSerializer
-#     lookup_field = 'slug_name'
+    period_start_str = request.GET.get('period_start', None)
+    period_end_str = request.GET.get('period_end', None)
 
-#     # Filters
-#     filter_backends = (SearchFilter)
-#     search_fields = ('period_start', 'period_end')
+    period_start = datetime.strptime(period_start_str, "%Y-%m-%d")
+    period_end = datetime.strptime(period_end_str, "%Y-%m-%d")
 
-#     def get_queryset(self):
-#         """Restrict list to public-only."""
-#         queryset = Visit.objects.all()
-#         response = {"results": {}}
-#         period_start_str = self.request.GET.get('period_start', None)
-#         period_end_str = self.request.GET.get('period_end', None)
-#         print(period_start_str)
-#         print(type(str(period_start_str)))
-#         print(datetime.strptime(str(period_start_str), "%Y/%m/%d"))
+    period_week_start = (period_start -
+                         timedelta(days=period_start.weekday()))
+    period_week_end = (period_end +
+                       timedelta(days=(7 - (period_end.weekday() + 1))))
 
-#         period_start = datetime.strptime(period_start_str, "%Y-%m-%d")
-#         period_end = datetime.strptime(period_end_str, "%Y-%m-%d")
-#         if self.action == 'list':
-#             for i in range(0, (period_end - period_start).days + 1):
-#                 curr_date = period_start + timedelta(i)
-#                 response['results'].setdefault(
-#                     curr_date,
-#                     Visit.objects.filter(
-#                         start_date__lte=curr_date,
-#                         end_date__gte=curr_date)
-#                     .count()
-#                 )
-#         return queryset
+    for i in range(0, (period_week_end - period_week_start).days + 1):
+        curr_date = period_week_start + timedelta(i)
+
+        if(curr_date >= period_start and curr_date <= period_end):
+            response['calendar'].setdefault(
+                i,
+                {
+                    'short_date': curr_date.strftime("%b %d"),
+                    'long_date': curr_date.strftime("%Y-%m-%d"),
+                    'dog_count': Visit.objects.filter(
+                        start_date__lte=curr_date,
+                        end_date__gte=curr_date)
+                    .count()
+                }
+            )
+            continue
+
+        response['calendar'].setdefault(i, {})
+
+    # return render(request, 'home.html', response, content_type='application/xhtml+xml')
+    return JsonResponse(response, status=200, safe=False)
