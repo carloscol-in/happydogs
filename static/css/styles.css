@@ -1,3 +1,6 @@
+.Home__Calendar {
+  margin-top: 3em;
+}
 .Home__Calendar--form {
   position: relative;
   z-index: 10;
@@ -14,7 +17,7 @@
   z-index: 0;
 }
 .Calendar__header {
-  background-color: rgb(244, 245, 180);
+  background-color: rgb(6, 6, 22);
 }
 .Calendar__header .Calendar__col:hover {
   background-color: inherit;
@@ -23,6 +26,7 @@
   width: 100%;
 }
 .Calendar__col {
+  color: rgb(173, 223, 247);
   width: 14.28%;
   padding: 0.5em 0.5em;
   text-align: center;
@@ -30,7 +34,7 @@
   transition: background-color 0.5s ease;
 }
 .Calendar__col:hover {
-  background-color: rgb(199, 240, 209);
+  background-color: rgb(164, 238, 234);
 }
 .Calendar__col--link,
 .Calendar__col--link:hover {
@@ -39,4 +43,17 @@
 }
 .Calendar__col--info {
   height: 100%;
+  color: black;
+}
+.Dogs__container {
+  position: relative;
+}
+#dog-data {
+  position: absolute;
+  top: -50px;
+  opacity: 0;
+  background-color: rgb(243, 243, 243);
+  padding: 2em 1em;
+  border-radius: 5px;
+  /* box-shadow: 0px 0px 5px 1px #eee; */
 }
