@@ -1,0 +1,25 @@
+.Navbar {
+  background: linear-gradient(-90deg, rgb(6, 6, 22), rgb(21, 21, 24));
+}
+.Navbar__brand a {
+  color: rgb(48, 222, 235);
+  text-decoration: none;
+  transition: all 0.5s ease;
+}
+.Navbar__brand a:hover {
+  color: rgb(21, 184, 196);
+  text-decoration: none;
+}
+.Navbar__menu {
+  list-style: none;
+  margin: 0;
+}
+.Navbar__menu--link,
+.Navbar__menu--link:hover {
+  color: rgb(48, 222, 235);
+  text-decoration: none;
+  transition: all 0.5s ease;
+}
+.Navbar__menu--link:hover {
+  color: rgb(21, 184, 196);
+}
